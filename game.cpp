@@ -266,16 +266,16 @@ void Game::Controls(void)
 
     // Check for player input and make changes accordingly
     if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) {
-        player_->SetVelocity(player_->GetVelocity() + 0.01f * player_->GetBearing());
+        player_->SetVelocity(player_->GetVelocity() + PLAYER_SPEED_MOVE * player_->GetBearing());
     }
     if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) {
-        player_->SetVelocity(player_->GetVelocity() - 0.01f * player_->GetBearing());
+        player_->SetVelocity(player_->GetVelocity() - PLAYER_SPEED_MOVE * player_->GetBearing());
     }
     if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
-        player_->SetAngle(player_->GetAngle() - 0.02);
+        player_->SetAngle(player_->GetAngle() - PLAYER_SPEED_ROTATE);
     }
     if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
-        player_->SetAngle(player_->GetAngle() + 0.02);
+        player_->SetAngle(player_->GetAngle() + PLAYER_SPEED_ROTATE);
     }
     if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS) {
         if (player_->fire()){
