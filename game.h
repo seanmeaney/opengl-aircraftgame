@@ -50,7 +50,7 @@ namespace game {
 
             void superHackeyHudThing(void);
 
-            void blastOff();
+            // void blastOff();
 
         private:
             // Main window: pointer to the GLFW window structure
@@ -73,6 +73,7 @@ namespace game {
 
 
             PlayerGameObject* player_;
+            ParticleSystem * tempHackyEndGame_;
             GameObject *background;
             CursorGameObject* cursor_;
             HUD *headsUD;
@@ -80,6 +81,7 @@ namespace game {
 
             glm::mat4 temp1;
             glm::mat4 temp2;
+            bool blastOff = false;
 
             // Keep track of time
             double current_time_;

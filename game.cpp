@@ -280,7 +280,7 @@ void Game::Controls(void)
     if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS) {
         if (player_->fire()){
             BulletGameObject* b = new BulletGameObject(player_->GetPosition(), tex_[6], player_);
-            b->SetVelocity(5.0f * player_->GetBearing());
+            b->SetVelocity(BULLET_SPEED * player_->GetBearing());
             b->SetScale(0.3);
             b->SetAngle(player_->GetAngle());
             game_objects_.push_back(b);
@@ -348,11 +348,11 @@ void Game::Update(double delta_time)
             glfwSetWindowShouldClose(window_, true);
         }
 
-        // Render game object
+        // Render all game objects
         ParticleSystem *p = dynamic_cast<ParticleSystem*>(current_game_object);
-        if (p != nullptr){
+        if (p != nullptr){  //if game object is a particle system (as shown by cast)
             current_game_object->Render(particle_shader_, current_time_);
-        } else {
+        } else {    //else render with normal shader
             sprite_shader_.SetUniformMat4("view_matrix", temp1);
             current_game_object->Render(sprite_shader_, current_time_);
         }
@@ -388,8 +388,22 @@ void Game::Update(double delta_time)
     headsUD->showb2(inv.rocketBooster > 1);
     headsUD->showFuel(inv.rocketFuel == true);
 
-    if(inv.rocketBody == true && inv.rocketBooster > 1 && inv.rocketFuel == true){
-        blastOff();
+    if (!blastOff && true){
+    //if(inv.rocketBody == true && inv.rocketBooster > 1 && inv.rocketFuel == true){
+        blastOff = true;
+        player_ = new PlayerGameObject(player_->GetPosition(),tex_[10], tex_[12]);
+        tempHackyEndGame_ = new ParticleSystem(glm::vec3(0.0f, -0.6f, 0.0f), tex_[4], player_);
+        tempHackyEndGame_->setCollsionType(0);
+        tempHackyEndGame_->SetScale(0.4);
+        tempHackyEndGame_->setCycle(1.8);
+    }
+    if (blastOff){
+        glm::vec3 ouutatime = player_->GetPosition();
+        ouutatime.y += 0.01f;
+        player_->SetPosition(ouutatime);
+        tempHackyEndGame_->Update(current_time_);
+        tempHackyEndGame_->Render(particle_shader_, current_time_);
+        player_->Render(sprite_shader_, current_time_);
     }
 
 
@@ -405,65 +419,65 @@ void Game::Update(double delta_time)
 }
 
 
-void Game::blastOff(){
+// void Game::blastOff(){
 
-    GameObject *blast = new GameObject(player_->GetPosition(),tex_[10]);
-    ParticleSystem *pow = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[4], blast);
-    pow->SetScale(0.4);
-    pow->setCycle(1.8);
+//     GameObject *blast = new GameObject(player_->GetPosition(),tex_[10]);
+//     ParticleSystem *pow = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[4], blast);
+//     pow->SetScale(0.4);
+//     pow->setCycle(1.8);
 
 
-    double lastTime = glfwGetTime();
-    for (int i = 0; i < 400; i++)
-    {
-        glClearColor(viewport_background_color_g.r,
-                     viewport_background_color_g.g,
-                     viewport_background_color_g.b, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//     double lastTime = glfwGetTime();
+//     for (int i = 0; i < 400; i++)
+//     {
+//         glClearColor(viewport_background_color_g.r,
+//                      viewport_background_color_g.g,
+//                      viewport_background_color_g.b, 0.0);
+//         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Set view to zoom out, centered by default at 0,0
+//         // Set view to zoom out, centered by default at 0,0
 
-        float cameraZoom = 0.25f;
-        glm::mat4 view_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(cameraZoom, cameraZoom, cameraZoom)) *
-                                glm::translate(glm::mat4(1.0f), -player_->GetPosition());
+//         float cameraZoom = 0.25f;
+//         glm::mat4 view_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(cameraZoom, cameraZoom, cameraZoom)) *
+//                                 glm::translate(glm::mat4(1.0f), -player_->GetPosition());
 
-        float aspect_ratio = ((float) window_width_g)/((float) window_height_g);
+//         float aspect_ratio = ((float) window_width_g)/((float) window_height_g);
 
-        // Set view to zoom out, centered by default at 0,0
-        glm::mat4 window_scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f/aspect_ratio, 1.0f, 1.0f));
-        temp1 = window_scale * view_matrix;
-        // glm::mat4 temp2 = window_scale * view_matrix;
-        // sprite_shader_.SetUniformMat4("view_matrix", temp1);
+//         // Set view to zoom out, centered by default at 0,0
+//         glm::mat4 window_scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f/aspect_ratio, 1.0f, 1.0f));
+//         temp1 = window_scale * view_matrix;
+//         // glm::mat4 temp2 = window_scale * view_matrix;
+//         // sprite_shader_.SetUniformMat4("view_matrix", temp1);
         
-        // Calculate delta time
-        double currentTime = glfwGetTime();
-        double deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
+//         // Calculate delta time
+//         double currentTime = glfwGetTime();
+//         double deltaTime = currentTime - lastTime;
+//         lastTime = currentTime;
 
 
-        glm::vec3 ouutatime = blast->GetPosition();
-        ouutatime.y += 0.01f;
-        blast->SetPosition(ouutatime);
+//         glm::vec3 ouutatime = blast->GetPosition();
+//         ouutatime.y += 0.01f;
+//         blast->SetPosition(ouutatime);
 
-        background->Render(sprite_shader_, current_time_);
+//         background->Render(sprite_shader_, current_time_);
 
-        particle_shader_.SetUniformMat4("view_matrix", temp1);
-        pow->Update(deltaTime);
-        pow->Render(particle_shader_, current_time_);
+//         particle_shader_.SetUniformMat4("view_matrix", temp1);
+//         pow->Update(deltaTime);
+//         pow->Render(particle_shader_, current_time_);
 
-        sprite_shader_.SetUniformMat4("view_matrix", temp1);
-        blast->Render(sprite_shader_, current_time_);
+//         sprite_shader_.SetUniformMat4("view_matrix", temp1);
+//         blast->Render(sprite_shader_, current_time_);
 
         
-        // Push buffer drawn in the background onto the display
-        glfwSwapBuffers(window_);
+//         // Push buffer drawn in the background onto the display
+//         glfwSwapBuffers(window_);
 
-        glfwPollEvents();
-    }
+//         glfwPollEvents();
+//     }
     
 
 
-    glfwSetWindowShouldClose(window_, true);
-}
+//     glfwSetWindowShouldClose(window_, true);
+// }
        
 } // namespace game
