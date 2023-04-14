@@ -292,11 +292,11 @@ void Game::Controls(void)
     if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) {
         player_->SetVelocity(player_->GetVelocity() - PLAYER_SPEED_MOVE * player_->GetBearing());
     }
-    if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
-        player_->SetAngle(!blastOffTime && player_->GetAngle() - PLAYER_SPEED_ROTATE);
+    if (blastOffTime < 0 && glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
+        player_->SetAngle(player_->GetAngle() - PLAYER_SPEED_ROTATE);
     }
-    if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
-        player_->SetAngle(!blastOffTime && player_->GetAngle() + PLAYER_SPEED_ROTATE);
+    if (blastOffTime < 0 &&  glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
+        player_->SetAngle(player_->GetAngle() + PLAYER_SPEED_ROTATE);
     }
     if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS) {
         if (player_->fire()){
@@ -394,8 +394,7 @@ void Game::Update(double delta_time)
     headsUD->showb2(inv.rocketBooster > 1);
     headsUD->showFuel(inv.rocketFuel == true);
 
-    if (blastOffTime < 0 && true){
-    //if(inv.rocketBody == true && inv.rocketBooster > 1 && inv.rocketFuel == true){
+    if(inv.rocketBody == true && inv.rocketBooster > 1 && inv.rocketFuel == true){
         blastOffTime = current_time_;
         player_ = new PlayerGameObject(player_->GetPosition(),tex_[10], tex_[12]);
         tempHackyEndGame_ = new ParticleSystem(glm::vec3(0.0f, -0.6f, 0.0f), tex_[4], player_);
@@ -419,12 +418,9 @@ void Game::Update(double delta_time)
     cursor_->Render(sprite_shader_, current_time_);
 
     //uhhhh
-    sprite_shader_.SetUniformMat4("view_matrix", temp2);
+    // sprite_shader_.SetUniformMat4("view_matrix", temp2);
     headsUD->render(sprite_shader_, current_time_);
-
-
-    
-    
+ 
 }
        
 } // namespace game
