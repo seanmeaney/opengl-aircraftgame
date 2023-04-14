@@ -260,6 +260,27 @@ void Game::SetAllTextures(void)
     glBindTexture(GL_TEXTURE_2D, tex_[0]);
 }
 
+void Game::fireBullet(void){
+    BulletGameObject* b = new BulletGameObject(player_->GetPosition(), tex_[6], player_);
+    b->SetVelocity(BULLET_SPEED * player_->GetBearing());
+    b->SetScale(0.3);
+    b->SetAngle(player_->GetAngle());
+    game_objects_.push_back(b);
+}
+
+void Game::fireMissile(GameObject * target){
+    MissileGameObject* m = new MissileGameObject(player_->GetPosition(),tex_[9],player_, target);
+    m->SetScale(0.4);
+    m->SetAngle(player_->GetAngle());
+
+    ParticleSystem *particles = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[4], m);
+    particles->setCollsionType(0);
+    particles->SetScale(0.2);
+    particles->setCycle(1.2);
+    game_objects_.push_back(particles);
+    game_objects_.push_back(m);
+    inv.numMissiles--;
+}
 
 void Game::Controls(void)
 {
@@ -272,35 +293,20 @@ void Game::Controls(void)
         player_->SetVelocity(player_->GetVelocity() - PLAYER_SPEED_MOVE * player_->GetBearing());
     }
     if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
-        player_->SetAngle(player_->GetAngle() - PLAYER_SPEED_ROTATE);
+        player_->SetAngle(!blastOffTime && player_->GetAngle() - PLAYER_SPEED_ROTATE);
     }
     if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
-        player_->SetAngle(player_->GetAngle() + PLAYER_SPEED_ROTATE);
+        player_->SetAngle(!blastOffTime && player_->GetAngle() + PLAYER_SPEED_ROTATE);
     }
     if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS) {
         if (player_->fire()){
-            BulletGameObject* b = new BulletGameObject(player_->GetPosition(), tex_[6], player_);
-            b->SetVelocity(BULLET_SPEED * player_->GetBearing());
-            b->SetScale(0.3);
-            b->SetAngle(player_->GetAngle());
-            game_objects_.push_back(b);
+            fireBullet();
         }
     }
     if (glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
         GameObject *validTarget = cursor_->getTarget();
         if(validTarget && inv.numMissiles > 0 && player_->fire()){
-            MissileGameObject* m = new MissileGameObject(player_->GetPosition(),tex_[9],player_,validTarget);
-            m->SetScale(0.4);
-            m->SetAngle(player_->GetAngle());
-
-            ParticleSystem *particles = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[4], m);
-            particles->setCollsionType(0);
-            particles->SetScale(0.2);
-            particles->setCycle(1.2);
-            game_objects_.push_back(particles);
-            game_objects_.push_back(m);
-            inv.numMissiles--;
-            
+            fireMissile(validTarget);
         }
     }
 

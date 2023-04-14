@@ -48,6 +48,9 @@ namespace game {
             // Run the game (keep the game active)
             void MainLoop(void); 
 
+            void fireBullet(void);
+            void fireMissile(GameObject *);
+
             void superHackeyHudThing(void);
 
         private:
