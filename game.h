@@ -50,8 +50,6 @@ namespace game {
 
             void superHackeyHudThing(void);
 
-            // void blastOff();
-
         private:
             // Main window: pointer to the GLFW window structure
             GLFWwindow *window_;
@@ -81,7 +79,7 @@ namespace game {
 
             glm::mat4 temp1;
             glm::mat4 temp2;
-            bool blastOff = false;
+            double blastOffTime = -1.0;
 
             // Keep track of time
             double current_time_;

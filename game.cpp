@@ -388,22 +388,25 @@ void Game::Update(double delta_time)
     headsUD->showb2(inv.rocketBooster > 1);
     headsUD->showFuel(inv.rocketFuel == true);
 
-    if (!blastOff && true){
+    if (blastOffTime < 0 && true){
     //if(inv.rocketBody == true && inv.rocketBooster > 1 && inv.rocketFuel == true){
-        blastOff = true;
+        blastOffTime = current_time_;
         player_ = new PlayerGameObject(player_->GetPosition(),tex_[10], tex_[12]);
         tempHackyEndGame_ = new ParticleSystem(glm::vec3(0.0f, -0.6f, 0.0f), tex_[4], player_);
         tempHackyEndGame_->setCollsionType(0);
         tempHackyEndGame_->SetScale(0.4);
         tempHackyEndGame_->setCycle(1.8);
     }
-    if (blastOff){
+    if (blastOffTime > 0){
         glm::vec3 ouutatime = player_->GetPosition();
         ouutatime.y += 0.01f;
         player_->SetPosition(ouutatime);
         tempHackyEndGame_->Update(current_time_);
         tempHackyEndGame_->Render(particle_shader_, current_time_);
         player_->Render(sprite_shader_, current_time_);
+        if (current_time_ - blastOffTime > 4.0){
+            glfwSetWindowShouldClose(window_, true);
+        }
     }
 
 
@@ -417,67 +420,5 @@ void Game::Update(double delta_time)
     
     
 }
-
-
-// void Game::blastOff(){
-
-//     GameObject *blast = new GameObject(player_->GetPosition(),tex_[10]);
-//     ParticleSystem *pow = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[4], blast);
-//     pow->SetScale(0.4);
-//     pow->setCycle(1.8);
-
-
-//     double lastTime = glfwGetTime();
-//     for (int i = 0; i < 400; i++)
-//     {
-//         glClearColor(viewport_background_color_g.r,
-//                      viewport_background_color_g.g,
-//                      viewport_background_color_g.b, 0.0);
-//         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-//         // Set view to zoom out, centered by default at 0,0
-
-//         float cameraZoom = 0.25f;
-//         glm::mat4 view_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(cameraZoom, cameraZoom, cameraZoom)) *
-//                                 glm::translate(glm::mat4(1.0f), -player_->GetPosition());
-
-//         float aspect_ratio = ((float) window_width_g)/((float) window_height_g);
-
-//         // Set view to zoom out, centered by default at 0,0
-//         glm::mat4 window_scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f/aspect_ratio, 1.0f, 1.0f));
-//         temp1 = window_scale * view_matrix;
-//         // glm::mat4 temp2 = window_scale * view_matrix;
-//         // sprite_shader_.SetUniformMat4("view_matrix", temp1);
-        
-//         // Calculate delta time
-//         double currentTime = glfwGetTime();
-//         double deltaTime = currentTime - lastTime;
-//         lastTime = currentTime;
-
-
-//         glm::vec3 ouutatime = blast->GetPosition();
-//         ouutatime.y += 0.01f;
-//         blast->SetPosition(ouutatime);
-
-//         background->Render(sprite_shader_, current_time_);
-
-//         particle_shader_.SetUniformMat4("view_matrix", temp1);
-//         pow->Update(deltaTime);
-//         pow->Render(particle_shader_, current_time_);
-
-//         sprite_shader_.SetUniformMat4("view_matrix", temp1);
-//         blast->Render(sprite_shader_, current_time_);
-
-        
-//         // Push buffer drawn in the background onto the display
-//         glfwSwapBuffers(window_);
-
-//         glfwPollEvents();
-//     }
-    
-
-
-//     glfwSetWindowShouldClose(window_, true);
-// }
        
 } // namespace game
