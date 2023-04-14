@@ -1,3 +1,4 @@
+#include "defs.h"
 #include "enemy_game_object.h"
 
 namespace game {
@@ -15,12 +16,12 @@ EnemyGameObject::EnemyGameObject(const glm::vec3 &position, GLuint texture, cons
 
 void EnemyGameObject::patroll(void) {
     rotation_ = atan2(position_.y - orbitPoint_.y, position_.x - orbitPoint_.x);
-    velocity_ = glm::vec3(-0.2 * glm::sin(rotation_), 0.2 * glm::cos(rotation_), 0);
+    velocity_ = glm::vec3(-ENEMY_SPEED_MOVE * glm::sin(rotation_), ENEMY_SPEED_MOVE * glm::cos(rotation_), 0);
 }
 
 void EnemyGameObject::move(void) {
     rotation_ = atan2(target_->GetPosition().y - position_.y, target_->GetPosition().x - position_.x) - M_PI / 2;
-    velocity_ = glm::vec3(-0.2 * glm::sin(rotation_), 0.2 * glm::cos(rotation_), 0);
+    velocity_ = glm::vec3(-ENEMY_SPEED_MOVE * glm::sin(rotation_), ENEMY_SPEED_MOVE * glm::cos(rotation_), 0);
 }
 
 // Update function for moving the enemy object around

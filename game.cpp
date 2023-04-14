@@ -14,18 +14,10 @@
 
 namespace game {
 
-// Some configuration constants
-// They are written here as global variables, but ideally they should be loaded from a configuration file
-
-// Globals that define the OpenGL window and viewport
-const char *window_title_g = "Final Project";
-const unsigned int window_width_g = 800*2;
-const unsigned int window_height_g =  600*2;
 const glm::vec3 viewport_background_color_g(0.0, 0.0, 0.0);
-
+const char *window_title_g = "Aircraft Game";  
 // Directory with game resources such as textures
 const std::string resources_directory_g = RESOURCES_DIRECTORY;
-
 
 Game::Game(void)
 {
@@ -159,7 +151,7 @@ void Game::superHackeyHudThing(void){
 
     // Set view to zoom out, centered by default at 0,0
     glm::mat4 window_scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f/aspect_ratio, 1.0f, 1.0f));
-    temp2 = window_scale * view_matrix;
+    staticViewMatrix = window_scale * view_matrix;
 }
 
 
@@ -188,10 +180,10 @@ void Game::MainLoop(void)
 
         // Set view to zoom out, centered by default at 0,0
         glm::mat4 window_scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f/aspect_ratio, 1.0f, 1.0f));
-        temp1 = window_scale * view_matrix;
-        // glm::mat4 temp2 = window_scale * view_matrix;
-        // sprite_shader_.SetUniformMat4("view_matrix", temp1);
-        particle_shader_.SetUniformMat4("view_matrix", temp1);
+        playerViewMatrix = window_scale * view_matrix;
+        // glm::mat4 staticViewMatrix = window_scale * view_matrix;
+        // sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
+        particle_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
         
         // Calculate delta time
         double currentTime = glfwGetTime();
@@ -359,7 +351,7 @@ void Game::Update(double delta_time)
         if (p != nullptr){  //if game object is a particle system (as shown by cast)
             current_game_object->Render(particle_shader_, current_time_);
         } else {    //else render with normal shader
-            sprite_shader_.SetUniformMat4("view_matrix", temp1);
+            sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
             current_game_object->Render(sprite_shader_, current_time_);
         }
     }
@@ -409,7 +401,7 @@ void Game::Update(double delta_time)
         tempHackyEndGame_->Update(current_time_);
         tempHackyEndGame_->Render(particle_shader_, current_time_);
         player_->Render(sprite_shader_, current_time_);
-        if (current_time_ - blastOffTime > 4.0){
+        if (current_time_ - blastOffTime > GAME_ENDGAME_TIME){
             glfwSetWindowShouldClose(window_, true);
         }
     }
@@ -418,7 +410,7 @@ void Game::Update(double delta_time)
     cursor_->Render(sprite_shader_, current_time_);
 
     //uhhhh
-    // sprite_shader_.SetUniformMat4("view_matrix", temp2);
+    sprite_shader_.SetUniformMat4("view_matrix", staticViewMatrix);
     headsUD->render(sprite_shader_, current_time_);
  
 }

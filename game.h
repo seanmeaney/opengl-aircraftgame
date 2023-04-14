@@ -80,8 +80,8 @@ namespace game {
             HUD *headsUD;
             
 
-            glm::mat4 temp1;
-            glm::mat4 temp2;
+            glm::mat4 playerViewMatrix; //moving view matrix with player in center
+            glm::mat4 staticViewMatrix; //for hud and other game elements that remain in a single position on screen
             double blastOffTime = -1.0;
 
             // Keep track of time
