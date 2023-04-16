@@ -76,7 +76,6 @@ void Game::Init(void)
 
 Game::~Game()
 {
-
     glfwDestroyWindow(window_);
     glfwTerminate();
 }

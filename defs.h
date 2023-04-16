@@ -29,6 +29,13 @@ const float GAME_ENDGAME_TIME = 4.0;
 
 //GAME ENUMS
 
+struct Inventory {
+    int numMissiles = 0;
+    bool rocketBody = false;
+    int rocketBooster = 0;
+    bool rocketFuel = false;
+};
+
 enum CollisionTypes{
     NOCOLLISION = 0, 
     STANDARDCOLLISION = 1, 

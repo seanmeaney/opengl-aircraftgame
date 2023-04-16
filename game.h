@@ -20,15 +20,6 @@
 
 namespace game {
 
-    struct Inventory {
-        int numMissiles = 0;
-        bool rocketBody = false;
-        int rocketBooster = 0;
-        bool rocketFuel = false;
-    };
-
-
-
 
     // A class for holding the main game objects
     class Game {
