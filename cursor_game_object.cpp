@@ -4,7 +4,7 @@ namespace game
 {
     CursorGameObject::CursorGameObject(const glm::vec3 &position, GLuint texture, GLuint texture2, GLFWwindow *window, GameObject *player)
         : GameObject(position, texture){
-        collisionType_ = 4;
+        collisionType_ = CURSORCOLLISION;
         window_ = window;
         other_tex = texture2;
         default_tex = texture;
@@ -13,7 +13,7 @@ namespace game
     }
 
     bool CursorGameObject::Collide(GameObject *other){
-        if(!deceased_ && !other->isKill() && other != player_ && other->getCollisionType() == 1){
+        if(!deceased_ && !other->isKill() && other != player_ && other->getCollisionType() == STANDARDCOLLISION){
             if(glm::distance(position_ * scale_, other->GetPosition() * other->GetScale()) < 0.5f){
                 return true;
             }

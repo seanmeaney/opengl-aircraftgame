@@ -8,19 +8,19 @@ BulletGameObject::BulletGameObject(const glm::vec3 &position, GLuint texture, Ga
     current_t_ = 0.0;
 	start_time = 0.0;
     last_t_ = 0.0;
-    collisionType_ = 2;
+    collisionType_ = BULLETCOLLISION;
     firer = dontKillMePlz;
 }
 
 bool BulletGameObject::Collide(GameObject *other) {
-    if (!deceased_ && !other->isKill() && other->getCollisionType() == 1 && other != firer) {
+    if (!deceased_ && !other->isKill() && other->getCollisionType() == STANDARDCOLLISION && other != firer) {
         // Define terms of quadratic equation for ray-circle intersection test
-        // We assume that they ray direction is given by the velocity vector
+        // We assume that the ray direction is given by the velocity vector
         glm::vec3 pmc(initial_pos_ - other->GetPosition());
         float a = glm::dot(velocity_, velocity_);
         float b = glm::dot(2.0f * velocity_, pmc);
         // May need to fine-tune the default radius for best effects
-        float r = 0.5;  // obj[i]->GetRadius();
+        float r = 0.5;
         float c = glm::dot(pmc, pmc) - r * r;
 
         // Solve quadratic equation

@@ -6,14 +6,14 @@ MissileGameObject::MissileGameObject(const glm::vec3 &position, GLuint texture, 
     : GameObject(position, texture) {
     target_ = target;
     firer = dontKillMePlz;
-    collisionType_ = 3;
+    collisionType_ = MISSILECOLLISION;
     current_t_ = 0.0;
 	start_time = 0.0;
     last_t_ = 0.0;
 }
 
 bool MissileGameObject::Collide(GameObject *other){
-    if (other != firer && other->getCollisionType() == 1){
+    if (other != firer && other->getCollisionType() == STANDARDCOLLISION){
         if(glm::distance(position_, other->GetPosition()) < 0.2f){
             deceased_ = true;
             // other->kill(true);
@@ -38,7 +38,6 @@ void MissileGameObject::Update(double delta_time) {
 
     
     GameObject::Update(delta_time);
-    // TODO: bullet should be deleted after some time
 }
 
 }  // namespace game

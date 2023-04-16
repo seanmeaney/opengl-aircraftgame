@@ -16,7 +16,7 @@ GameObject::GameObject(const glm::vec3 &position, GLuint texture)
     velocity_ = glm::vec3(0.0f, 0.0f, 0.0f); // Starts out stationary
     texture_ = texture;
     fill = true;
-    collisionType_ = 1;
+    collisionType_ = STANDARDCOLLISION;
     deceased_ = false;
     parent = nullptr;
     health_ = 100.0f;
@@ -24,13 +24,13 @@ GameObject::GameObject(const glm::vec3 &position, GLuint texture)
 
 
 bool GameObject::Collide(GameObject *other){
-    if(!deceased_ && !other->isKill() &&  collisionType_ == 1 && other->collisionType_ == 1){
+    if(!deceased_ && !other->isKill() &&  collisionType_ == STANDARDCOLLISION && other->collisionType_ == STANDARDCOLLISION){
         if(glm::distance(position_, other->position_) < 0.5f){
             deceased_ = true;
             other->deceased_ = true;
             return true;
         }
-    } else if (other->collisionType_ == 2 || other->collisionType_ == 3 || other->collisionType_ == 4){
+    } else if (other->collisionType_ == BULLETCOLLISION || other->collisionType_ == MISSILECOLLISION || other->collisionType_ == CURSORCOLLISION){
         other->Collide(this);
     }
     return false;

@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 
 #include "shader.h"
+#include "defs.h"
 
 namespace game {
 
