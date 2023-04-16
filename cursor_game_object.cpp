@@ -24,20 +24,19 @@ namespace game
 
     void CursorGameObject::Update(double delta_time)
     {
-        //temp dont do it this way
-        //also need viewport info
         float camera_zoom = 0.25f;
 
         double xpos, ypos;
         glfwGetCursorPos(window_, &xpos, &ypos);
 
         // Get information about the window
-        int width, height;
-        glfwGetWindowSize(window_, &width, &height);
+        // int width, height;
+        // glfwGetWindowSize(window_, &width, &height);
 
-        float aspect_ratio = (float)width/(float)height;
-        position_.x = ((2.0f*xpos - width)* aspect_ratio)/(width*camera_zoom) + player_->GetPosition().x;
-        position_.y = (-2.0f*ypos + height)/(height*camera_zoom) + player_->GetPosition().y;
+        //convert cursor position from window position to game coordinates
+        float aspect_ratio = (float)window_width_g/(float)window_height_g;
+        position_.x = ((2.0f*xpos - window_width_g)* aspect_ratio)/(window_width_g*camera_zoom) + player_->GetPosition().x;
+        position_.y = (-2.0f*ypos + window_height_g)/(window_height_g*camera_zoom) + player_->GetPosition().y;
 
 
         // GameObject::Update(delta_time);
