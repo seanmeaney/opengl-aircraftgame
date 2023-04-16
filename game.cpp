@@ -350,6 +350,8 @@ void Game::Update(double delta_time)
         if (p != nullptr){  //if game object is a particle system (as shown by cast)
             current_game_object->Render(particle_shader_, current_time_);
         } else {    //else render with normal shader
+            //must set view matrix here intead of in mainloop as sprite shader must use two
+            //different view matrices (one for hud and one that tracks the player for other objects)
             sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
             current_game_object->Render(sprite_shader_, current_time_);
         }
@@ -408,7 +410,8 @@ void Game::Update(double delta_time)
 
     cursor_->Render(sprite_shader_, current_time_);
 
-    //uhhhh
+    //hacky hud uses a seperate viewmatrix that is locked to the screen
+    //must swap to the static viewmatrix before rendering
     sprite_shader_.SetUniformMat4("view_matrix", staticViewMatrix);
     headsUD->render(sprite_shader_, current_time_);
  
