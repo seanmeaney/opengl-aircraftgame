@@ -1,9 +1,9 @@
 #ifndef CURSOR_GAME_OBJECT_H
 #define CURSOR_GAME_OBJECT_H
 
-// #define GLEW_STATIC
-// #include <GL/glew.h>
-// #include <GLFW/glfw3.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "game_object.h"
 
