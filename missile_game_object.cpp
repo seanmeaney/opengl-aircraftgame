@@ -16,7 +16,6 @@ bool MissileGameObject::Collide(GameObject *other){
     if (other != firer && other->getCollisionType() == STANDARDCOLLISION){
         if(glm::distance(position_, other->GetPosition()) < 0.2f){
             deceased_ = true;
-            // other->kill(true);
             other->setHealth(0.0f);
             return true;
         }
@@ -27,7 +26,7 @@ bool MissileGameObject::Collide(GameObject *other){
 void MissileGameObject::Update(double delta_time) {
 
     rotation_ = atan2(target_->GetPosition().y - position_.y, target_->GetPosition().x - position_.x) - M_PI / 2;
-    velocity_ = glm::vec3(-2.0 * glm::sin(rotation_), 2.0 * glm::cos(rotation_), 0);
+    velocity_ = glm::vec3(-MISSILE_SPEED * glm::sin(rotation_), MISSILE_SPEED * glm::cos(rotation_), 0);
 
     last_t_ = current_t_;
     current_t_ += delta_time;

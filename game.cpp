@@ -87,8 +87,8 @@ void Game::Setup(void)
 
     std::random_device rd;
     std::mt19937 rng(rd());
-    std::uniform_int_distribution<int> uni(50, 75);
-    std::uniform_int_distribution<int> un2(-40, 40);
+    std::uniform_int_distribution<int> rndEnemyNum(GAME_MIN_NUM_ENEMIES, GAME_MAX_NUM_ENEMIES);
+    std::uniform_int_distribution<int> rngPos(-GAME_ENEMY_SPAWN_RADIUS, GAME_ENEMY_SPAWN_RADIUS);
 
     // Load textures
     SetAllTextures();
@@ -118,17 +118,17 @@ void Game::Setup(void)
 
     float tempx;
     float tempy;
-    for (int i = 0; i < uni(rng); i++)
+    for (int i = 0; i < rndEnemyNum(rng); i++)
     {
-        tempx = (float) un2(rng);
-        tempy = (float) un2(rng);
+        tempx = (float) rngPos(rng);
+        tempy = (float) rngPos(rng);
 
         game_objects_.push_back(new EnemyGameObject(glm::vec3(tempx, tempy, 0.0f), tex_[1], glm::vec3(tempx + 4.0f, tempy - 4.0f, 0.0f), player_));
-        tempx = (float) un2(rng);
-        tempy = (float) un2(rng);
+        tempx = (float) rngPos(rng);
+        tempy = (float) rngPos(rng);
         game_objects_.push_back(new EnemyGameObject(glm::vec3(tempx, tempy, 0.0f), tex_[2], glm::vec3(tempx + 4.0f, tempy - 4.0f, 0.0f), player_));
 
-        CollectibleGameObject *tempttt = new CollectibleGameObject(glm::vec3((float) un2(rng), (float) un2(rng), 0.0f),tex_[9], MissileType);
+        CollectibleGameObject *tempttt = new CollectibleGameObject(glm::vec3((float) rngPos(rng), (float) rngPos(rng), 0.0f),tex_[9], MissileType);
         tempttt->SetScale(0.4);
         collectibles_.push_back(tempttt);
     }

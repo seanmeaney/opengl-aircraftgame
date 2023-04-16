@@ -53,9 +53,6 @@ void BulletGameObject::Update(double delta_time) {
 		deceased_ = true;
 	}
 
-    
-
-    // TODO: bullet should be deleted after some time
 }
 
 }  // namespace game
