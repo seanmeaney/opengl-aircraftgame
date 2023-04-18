@@ -94,10 +94,10 @@ void Game::Setup(void)
 
     // Setup the player object (position, texture, vertex count)
     // Note that, in this specific implementation, the player object should always be the first object in the game object vector 
-    player_ = new PlayerGameObject(glm::vec3(0.0f, 0.0f, 0.0f), tex_[0], tex_[5]);
+    player_ = new PlayerGameObject(glm::vec3(0.0f, 0.0f, 0.0f), tex_[TEX_CHOPPER], tex_[TEX_BLADE]);
 
     // Setup particle system
-    ParticleSystem *particles = new ParticleSystem(glm::vec3(0.0f, 0.0f, -0.1f), tex_[4], player_);
+    ParticleSystem *particles = new ParticleSystem(glm::vec3(0.0f, 0.0f, -0.1f), tex_[TEX_ORB], player_);
     particles->setCollsionType(0);
     particles->SetScale(0.2);
     particles->setCycle(0.4);
@@ -105,11 +105,11 @@ void Game::Setup(void)
     game_objects_.push_back(player_);
     
 
-    cursor_ = new CursorGameObject(glm::vec3(0.0f, 0.0f, -0.2f),tex_[7], tex_[8], window_, player_);
+    cursor_ = new CursorGameObject(glm::vec3(0.0f, 0.0f, -0.2f),tex_[TEX_CURSOR], tex_[TEX_CURSOR_LOCK], window_, player_);
     // game_objects_.push_back(cursor_);
 
     // Setup background
-    background = new GameObject(glm::vec3(0.0f, 0.0f, 0.1f), tex_[3]);
+    background = new GameObject(glm::vec3(0.0f, 0.0f, 0.1f), tex_[TEX_DUNE]);
     background->setCollsionType(0);
     background->SetScale(100.0);
     background->setFill(false);
@@ -122,22 +122,22 @@ void Game::Setup(void)
         tempx = (float) rngPos(rng);
         tempy = (float) rngPos(rng);
 
-        game_objects_.push_back(new EnemyGameObject(glm::vec3(tempx, tempy, 0.0f), tex_[1], glm::vec3(tempx + 4.0f, tempy - 4.0f, 0.0f), player_));
+        game_objects_.push_back(new EnemyGameObject(glm::vec3(tempx, tempy, 0.0f), tex_[TEX_REDPLANE], glm::vec3(tempx + 4.0f, tempy - 4.0f, 0.0f), player_));
         tempx = (float) rngPos(rng);
         tempy = (float) rngPos(rng);
-        game_objects_.push_back(new EnemyGameObject(glm::vec3(tempx, tempy, 0.0f), tex_[2], glm::vec3(tempx + 4.0f, tempy - 4.0f, 0.0f), player_));
+        game_objects_.push_back(new EnemyGameObject(glm::vec3(tempx, tempy, 0.0f), tex_[TEX_GREENPLANE], glm::vec3(tempx + 4.0f, tempy - 4.0f, 0.0f), player_));
 
-        CollectibleGameObject *tempttt = new CollectibleGameObject(glm::vec3((float) rngPos(rng), (float) rngPos(rng), 0.0f),tex_[9], MissileType);
+        CollectibleGameObject *tempttt = new CollectibleGameObject(glm::vec3((float) rngPos(rng), (float) rngPos(rng), 0.0f),tex_[TEX_MISSILE], MissileType);
         tempttt->SetScale(0.4);
         collectibles_.push_back(tempttt);
     }
     
-    collectibles_.push_back(new CollectibleGameObject(glm::vec3(-3.0f, -3.0f, 0.0f), tex_[12], RocketBodyType));
-    collectibles_.push_back(new CollectibleGameObject(glm::vec3(-3.0f, 3.0f, 0.0f), tex_[13], RocketBoosterType));
-    collectibles_.push_back(new CollectibleGameObject(glm::vec3(3.0f, 3.0f, 0.0f), tex_[13], RocketBoosterType));
-    collectibles_.push_back(new CollectibleGameObject(glm::vec3(3.0f, -3.0f, 0.0f), tex_[11], RocketFuel));
+    collectibles_.push_back(new CollectibleGameObject(glm::vec3(-3.0f, -3.0f, 0.0f), tex_[TEX_ROCKET_BODY], RocketBodyType));
+    collectibles_.push_back(new CollectibleGameObject(glm::vec3(-3.0f, 3.0f, 0.0f), tex_[TEX_BOOSTER], RocketBoosterType));
+    collectibles_.push_back(new CollectibleGameObject(glm::vec3(3.0f, 3.0f, 0.0f), tex_[TEX_BOOSTER], RocketBoosterType));
+    collectibles_.push_back(new CollectibleGameObject(glm::vec3(3.0f, -3.0f, 0.0f), tex_[TEX_GAS], RocketFuel));
 
-    headsUD = new HUD(tex_[12], tex_[13], tex_[11], tex_[9], tex_[14]);
+    headsUD = new HUD(tex_[TEX_ROCKET_BODY], tex_[TEX_BOOSTER], tex_[TEX_GAS], tex_[TEX_MISSILE], tex_[TEX_HUD]);
 }
 
 
@@ -252,7 +252,7 @@ void Game::SetAllTextures(void)
 }
 
 void Game::fireBullet(void){
-    BulletGameObject* b = new BulletGameObject(player_->GetPosition(), tex_[6], player_);
+    BulletGameObject* b = new BulletGameObject(player_->GetPosition(), tex_[TEX_BULLET], player_);
     b->SetVelocity(BULLET_SPEED * player_->GetBearing());
     b->SetScale(0.3);
     b->SetAngle(player_->GetAngle());
@@ -260,11 +260,11 @@ void Game::fireBullet(void){
 }
 
 void Game::fireMissile(GameObject * target){
-    MissileGameObject* m = new MissileGameObject(player_->GetPosition(),tex_[9],player_, target);
+    MissileGameObject* m = new MissileGameObject(player_->GetPosition(),tex_[TEX_MISSILE],player_, target);
     m->SetScale(0.4);
     m->SetAngle(player_->GetAngle());
 
-    ParticleSystem *particles = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[4], m);
+    ParticleSystem *particles = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[TEX_ORB], m);
     particles->setCollsionType(0);
     particles->SetScale(0.2);
     particles->setCycle(1.2);
@@ -331,7 +331,6 @@ void Game::Update(double delta_time)
             cursor_->setLock(current_game_object);
         }
 
-
         if (!current_game_object->isKill()){
             current_game_object->Update(delta_time);
             for (int j = i + 1; j < game_objects_.size(); j++) {
@@ -375,7 +374,6 @@ void Game::Update(double delta_time)
             } else if (temp == RocketFuel){ //rocketfuel
                 inv.rocketFuel = true;
             }
-            // inv.numMissiles++;
             collectibles_.erase(collectibles_.begin() + i);
             delete tempCur;
         }
@@ -389,8 +387,8 @@ void Game::Update(double delta_time)
 
     if(inv.rocketBody == true && inv.rocketBooster > 1 && inv.rocketFuel == true){
         blastOffTime = current_time_;
-        player_ = new PlayerGameObject(player_->GetPosition(),tex_[10], tex_[12]);
-        tempHackyEndGame_ = new ParticleSystem(glm::vec3(0.0f, -0.6f, 0.0f), tex_[4], player_);
+        player_ = new PlayerGameObject(player_->GetPosition(),tex_[TEX_ROCKET], tex_[TEX_ORB]);
+        tempHackyEndGame_ = new ParticleSystem(glm::vec3(0.0f, -0.6f, 0.0f), tex_[TEX_ORB], player_);
         tempHackyEndGame_->setCollsionType(0);
         tempHackyEndGame_->SetScale(0.4);
         tempHackyEndGame_->setCycle(1.8);
