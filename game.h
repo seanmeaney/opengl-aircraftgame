@@ -41,6 +41,8 @@ namespace game {
 
             void fireBullet(void);
             void fireMissile(GameObject *);
+            void generateEnemies(void);
+            void generateCollectibles(void);
 
             void superHackeyHudThing(void);
 

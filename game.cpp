@@ -83,12 +83,6 @@ Game::~Game()
 
 void Game::Setup(void)
 {
-
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<int> rndEnemyNum(GAME_MIN_NUM_ENEMIES, GAME_MAX_NUM_ENEMIES);
-    std::uniform_int_distribution<int> rngPos(-GAME_ENEMY_SPAWN_RADIUS, GAME_ENEMY_SPAWN_RADIUS);
-
     // Load textures
     SetAllTextures();
 
@@ -106,7 +100,6 @@ void Game::Setup(void)
     
 
     cursor_ = new CursorGameObject(glm::vec3(0.0f, 0.0f, -0.2f),tex_[TEX_CURSOR], tex_[TEX_CURSOR_LOCK], window_, player_);
-    // game_objects_.push_back(cursor_);
 
     // Setup background
     background = new GameObject(glm::vec3(0.0f, 0.0f, 0.1f), tex_[TEX_DUNE]);
@@ -114,7 +107,17 @@ void Game::Setup(void)
     background->SetScale(100.0);
     background->setFill(false);
 
+    generateEnemies();
+    generateCollectibles();
 
+    superHackeyHudThing();
+}
+
+void Game::generateEnemies(void){
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> rndEnemyNum(GAME_MIN_NUM_ENEMIES, GAME_MAX_NUM_ENEMIES);
+    std::uniform_int_distribution<int> rngPos(-GAME_ENEMY_SPAWN_RADIUS, GAME_ENEMY_SPAWN_RADIUS);
     float tempx;
     float tempy;
     for (int i = 0; i < rndEnemyNum(rng); i++)
@@ -131,15 +134,14 @@ void Game::Setup(void)
         tempttt->SetScale(0.4);
         collectibles_.push_back(tempttt);
     }
-    
+}
+
+void Game::generateCollectibles(void){
     collectibles_.push_back(new CollectibleGameObject(glm::vec3(-3.0f, -3.0f, 0.0f), tex_[TEX_ROCKET_BODY], RocketBodyType));
     collectibles_.push_back(new CollectibleGameObject(glm::vec3(-3.0f, 3.0f, 0.0f), tex_[TEX_BOOSTER], RocketBoosterType));
     collectibles_.push_back(new CollectibleGameObject(glm::vec3(3.0f, 3.0f, 0.0f), tex_[TEX_BOOSTER], RocketBoosterType));
     collectibles_.push_back(new CollectibleGameObject(glm::vec3(3.0f, -3.0f, 0.0f), tex_[TEX_GAS], RocketFuel));
-
-    headsUD = new HUD(tex_[TEX_ROCKET_BODY], tex_[TEX_BOOSTER], tex_[TEX_GAS], tex_[TEX_MISSILE], tex_[TEX_HUD]);
 }
-
 
 void Game::superHackeyHudThing(void){
     float cameraZoom = 0.25f;
@@ -151,13 +153,13 @@ void Game::superHackeyHudThing(void){
     // Set view to zoom out, centered by default at 0,0
     glm::mat4 window_scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f/aspect_ratio, 1.0f, 1.0f));
     staticViewMatrix = window_scale * view_matrix;
+
+    headsUD = new HUD(tex_[TEX_ROCKET_BODY], tex_[TEX_BOOSTER], tex_[TEX_GAS], tex_[TEX_MISSILE], tex_[TEX_HUD]);
 }
 
 
 void Game::MainLoop(void)
 {
-
-    superHackeyHudThing();
 
     // Loop while the user did not close the window
     double lastTime = glfwGetTime();
