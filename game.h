@@ -81,7 +81,7 @@ namespace game {
             double current_time_;
 
             // Callback for when the window is resized
-            static void ResizeCallback(GLFWwindow* window, int width, int height);
+            // static void ResizeCallback(GLFWwindow* window, int width, int height);
 
             // Set a specific texture
             void SetTexture(GLuint w, const char *fname, GLint clamp);

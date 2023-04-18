@@ -57,7 +57,7 @@ void Game::Init(void)
     }
 
     // Set event callbacks
-    glfwSetFramebufferSizeCallback(window_, ResizeCallback);
+    // glfwSetFramebufferSizeCallback(window_, ResizeCallback);
 
     // Initialize particle shader
     particle_shader_.Init((resources_directory_g+std::string("/particle_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/particle_fragment_shader.glsl")).c_str());
@@ -203,12 +203,11 @@ void Game::MainLoop(void)
 }
 
 
-void Game::ResizeCallback(GLFWwindow* window, int width, int height)
-{
-
-    // Set OpenGL viewport based on framebuffer width and height
-    glViewport(0, 0, width, height);
-}
+// void Game::ResizeCallback(GLFWwindow* window, int width, int height)
+// {
+//     // Set OpenGL viewport based on framebuffer width and height
+//     glViewport(0, 0, width, height);
+// }
 
 
 void Game::SetTexture(GLuint w, const char *fname, GLint clamp = GL_CLAMP_TO_EDGE) {
