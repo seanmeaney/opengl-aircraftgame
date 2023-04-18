@@ -24,14 +24,10 @@ namespace game
 
     void CursorGameObject::Update(double delta_time)
     {
-        float camera_zoom = 0.25f;
+        // float camera_zoom = 0.25f;
 
         double xpos, ypos;
         glfwGetCursorPos(window_, &xpos, &ypos);
-
-        // Get information about the window
-        // int width, height;
-        // glfwGetWindowSize(window_, &width, &height);
 
         //convert cursor position from window position to game coordinates
         float aspect_ratio = (float)window_width_g/(float)window_height_g;

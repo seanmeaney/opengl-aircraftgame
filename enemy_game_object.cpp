@@ -27,7 +27,7 @@ void EnemyGameObject::move(void) {
 // Update function for moving the enemy object around
 void EnemyGameObject::Update(double delta_time) {
     if (!deceased_) {
-        if (glm::distance(position_, target_->GetPosition()) > 3) {
+        if (glm::distance(position_, target_->GetPosition()) > ENEMY_TARGET_DISTANCE) {
             state = 0;
         } else {
             state = 1;

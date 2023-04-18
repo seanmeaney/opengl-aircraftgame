@@ -10,7 +10,7 @@ class HUD {
 	public:
 		HUD(GLuint texture, GLuint texture2, GLuint texture3, GLuint texture4, GLuint texture5);
 		
-		void update(void);
+		void update(Inventory &);
 
 		inline void showBody(bool b) {body  = b; }
 		inline void showB1(bool b) {booster1  = b; }

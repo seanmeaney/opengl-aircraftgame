@@ -25,6 +25,14 @@ HUD::HUD(GLuint texture, GLuint texture2, GLuint texture3, GLuint texture4, GLui
     background->SetScale(10.0f);
 }
 
+void HUD::update(Inventory &inv){
+    showMissile(inv.numMissiles > 0);
+    showBody(inv.rocketBody == true);
+    showB1(inv.rocketBooster > 0);
+    showb2(inv.rocketBooster > 1);
+    showFuel(inv.rocketFuel == true);
+}
+
 
 void HUD::render(Shader& sprite_shader, double current_time){
     if (body){

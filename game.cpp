@@ -144,8 +144,7 @@ void Game::generateCollectibles(void){
 }
 
 void Game::superHackeyHudThing(void){
-    float cameraZoom = 0.25f;
-    glm::mat4 view_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(cameraZoom, cameraZoom, cameraZoom)) *
+    glm::mat4 view_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(camera_zoom, camera_zoom, camera_zoom)) *
                             glm::translate(glm::mat4(1.0f), -player_->GetPosition());
 
     float aspect_ratio = ((float) window_width_g)/((float) window_height_g);
@@ -173,8 +172,7 @@ void Game::MainLoop(void)
 
         // Set view to zoom out, centered by default at 0,0
 
-        float cameraZoom = 0.25f;
-        glm::mat4 view_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(cameraZoom, cameraZoom, cameraZoom)) *
+        glm::mat4 view_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(camera_zoom, camera_zoom, camera_zoom)) *
                                 glm::translate(glm::mat4(1.0f), -player_->GetPosition());
 
         float aspect_ratio = ((float) window_width_g)/((float) window_height_g);
@@ -184,6 +182,7 @@ void Game::MainLoop(void)
         playerViewMatrix = window_scale * view_matrix;
         // glm::mat4 staticViewMatrix = window_scale * view_matrix;
         // sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
+        sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
         particle_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
         
         // Calculate delta time
@@ -191,7 +190,7 @@ void Game::MainLoop(void)
         double deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        // Update the game
+        // Update (and render) the game
         Update(deltaTime);
 
         // Push buffer drawn in the background onto the display
@@ -201,13 +200,6 @@ void Game::MainLoop(void)
         glfwPollEvents();
     }
 }
-
-
-// void Game::ResizeCallback(GLFWwindow* window, int width, int height)
-// {
-//     // Set OpenGL viewport based on framebuffer width and height
-//     glViewport(0, 0, width, height);
-// }
 
 
 void Game::SetTexture(GLuint w, const char *fname, GLint clamp = GL_CLAMP_TO_EDGE) {
@@ -249,7 +241,6 @@ void Game::SetAllTextures(void)
     SetTexture(tex_[12], (resources_directory_g+std::string("/textures/rocket_body.png")).c_str());
     SetTexture(tex_[13], (resources_directory_g+std::string("/textures/booster.png")).c_str());
     SetTexture(tex_[14], (resources_directory_g+std::string("/textures/hud.png")).c_str());
-    glBindTexture(GL_TEXTURE_2D, tex_[0]);
 }
 
 void Game::fireBullet(void){
@@ -350,9 +341,6 @@ void Game::Update(double delta_time)
         if (p != nullptr){  //if game object is a particle system (as shown by cast)
             current_game_object->Render(particle_shader_, current_time_);
         } else {    //else render with normal shader
-            //must set view matrix here intead of in mainloop as sprite shader must use two
-            //different view matrices (one for hud and one that tracks the player for other objects)
-            sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
             current_game_object->Render(sprite_shader_, current_time_);
         }
     }
@@ -366,25 +354,21 @@ void Game::Update(double delta_time)
         if(collectibles_[i]->Collide(player_)){
             CollectibleGameObject *tempCur = collectibles_[i];
             ObjTypes temp = tempCur->getType();
-            if (temp == MissileType){ // missile
+            if (temp == MissileType){
                 inv.numMissiles++;
-            } else if (temp == RocketBodyType){ //rocketbody
+            } else if (temp == RocketBodyType){
                 inv.rocketBody = true;
-            } else if (temp == RocketBoosterType){ //rocketbooster
+            } else if (temp == RocketBoosterType){
                 inv.rocketBooster ++;
-            } else if (temp == RocketFuel){ //rocketfuel
+            } else if (temp == RocketFuel){
                 inv.rocketFuel = true;
             }
             collectibles_.erase(collectibles_.begin() + i);
             delete tempCur;
         }
     }
-    
-    headsUD->showMissile(inv.numMissiles > 0);
-    headsUD->showBody(inv.rocketBody == true);
-    headsUD->showB1(inv.rocketBooster > 0);
-    headsUD->showb2(inv.rocketBooster > 1);
-    headsUD->showFuel(inv.rocketFuel == true);
+
+    headsUD->update(inv);
 
     if(inv.rocketBody == true && inv.rocketBooster > 1 && inv.rocketFuel == true){
         blastOffTime = current_time_;
