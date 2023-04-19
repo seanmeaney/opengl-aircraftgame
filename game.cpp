@@ -43,7 +43,7 @@ void Game::Init(void)
         glfwTerminate();
         throw(std::runtime_error(std::string("Could not create window")));
     }
-    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Make the window's OpenGL context the current one
     glfwMakeContextCurrent(window_);
@@ -106,10 +106,10 @@ void Game::Setup(void)
     background->setCollsionType(0);
     background->SetScale(100.0);
     background->setFill(false);
+    background->setShadow(false);
 
     generateEnemies();
     generateCollectibles();
-
     superHackeyHudThing();
 }
 
@@ -308,7 +308,6 @@ void Game::Update(double delta_time)
     // Handle user input
     Controls();
 
-    bool cursorLock = false;
     cursor_->Update(delta_time);
 
     background->Render(sprite_shader_, current_time_);
@@ -319,7 +318,6 @@ void Game::Update(double delta_time)
         GameObject* current_game_object = game_objects_[i];
 
         if(cursor_->Collide(current_game_object)){
-            cursorLock = true;
             cursor_->setLock(current_game_object);
         }
 
@@ -343,9 +341,6 @@ void Game::Update(double delta_time)
         } else {    //else render with normal shader
             current_game_object->Render(sprite_shader_, current_time_);
         }
-    }
-    if(!cursorLock) {
-        cursor_->setLock(nullptr);
     }
 
     for (int i = 0; i < collectibles_.size(); i++)

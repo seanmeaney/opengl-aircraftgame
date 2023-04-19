@@ -20,6 +20,7 @@ GameObject::GameObject(const glm::vec3 &position, GLuint texture)
     deceased_ = false;
     parent = nullptr;
     health_ = 100.0f;
+    shadow_ = true;
 }
 
 
@@ -96,6 +97,7 @@ void GameObject::Render(Shader &shader, double current_time){
 
     shader.SetUniform1f("num_tiles", scale_);
     shader.SetUniform1i("fill", fill);
+    shader.SetUniform1i("shadow", false);
 
     // Setup the scaling matrix for the shader
     glm::mat4 scaling_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale_, scale_, 1.0));
@@ -106,17 +108,31 @@ void GameObject::Render(Shader &shader, double current_time){
     // Set up the translation matrix for the shader
     glm::mat4 translation_matrix = glm::translate(glm::mat4(1.0f), position_);
 
+    glm::vec3 shadowPos = position_;
+    shadowPos.x -= shadow_offset;
+    shadowPos.y -= shadow_offset;
+    glm::mat4 shadow_translation_matrix = glm::translate(glm::mat4(1.0f), shadowPos);
+
     // Setup the transformation matrix for the shader
     glm::mat4 transformation_matrix = translation_matrix * rotation_matrix * scaling_matrix;
+    glm::mat4 shadow_transformation_matrix = shadow_translation_matrix * rotation_matrix * scaling_matrix;
 
     if (parent){
         glm::mat4 p_rotation_matrix = glm::rotate(glm::mat4(1.0f), parent->GetAngle(), glm::vec3(0.0, 0.0, 1.0));
 
         glm::mat4 p_translation_matrix = glm::translate(glm::mat4(1.0f), parent->GetPosition());
 
+        shadowPos = parent->GetPosition();
+        shadowPos.x -= shadow_offset;
+        shadowPos.y -= shadow_offset;
+        
+        glm::mat4 p_shadow_translation_matrix = glm::translate(glm::mat4(1.0f), shadowPos);
+
         glm::mat4 p_transformation_matrix = p_translation_matrix * p_rotation_matrix;
+        glm::mat4 p_shadow_transformation_matrix = p_shadow_translation_matrix * p_rotation_matrix;
 
         transformation_matrix = p_transformation_matrix * transformation_matrix;
+        shadow_transformation_matrix = p_shadow_transformation_matrix * shadow_transformation_matrix;
     }
 
     // Set the transformation matrix in the shader
@@ -124,6 +140,13 @@ void GameObject::Render(Shader &shader, double current_time){
 
     // Draw the entity
     glDrawElements(GL_TRIANGLES, shader.GetSpriteSize(), GL_UNSIGNED_INT, 0);
+
+
+    if (shadow_){
+        shader.SetUniform1i("shadow", true);
+        shader.SetUniformMat4("transformation_matrix", shadow_transformation_matrix);
+        glDrawElements(GL_TRIANGLES, shader.GetSpriteSize(), GL_UNSIGNED_INT, 0);
+    }
 }
 
 } // namespace game

@@ -44,6 +44,7 @@ namespace game {
             inline void kill(bool k) { deceased_ = k;}
             inline void setParent(GameObject *p) {parent = p;}
             inline void setHealth (float h) { health_ = h;}
+            inline void setShadow (bool shadow) { shadow_ = shadow;}
 
             // Setters
             inline void SetPosition(const glm::vec3& position) { position_ = position; }
@@ -61,6 +62,7 @@ namespace game {
             float rotation_;
             glm::vec3 velocity_;
             bool deceased_;
+            bool shadow_;
             float health_;
 
             int collisionType_;

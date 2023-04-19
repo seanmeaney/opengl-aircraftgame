@@ -31,10 +31,14 @@ namespace game
 
         //convert cursor position from window position to game coordinates
         float aspect_ratio = (float)window_width_g/(float)window_height_g;
-        position_.x = ((2.0f*xpos - window_width_g)* aspect_ratio)/(window_width_g*camera_zoom) + player_->GetPosition().x;
-        position_.y = (-2.0f*ypos + window_height_g)/(window_height_g*camera_zoom) + player_->GetPosition().y;
+        position_.x = ((2.0f*xpos - window_width_g)* aspect_ratio)/
+                        (window_width_g*camera_zoom) + player_->GetPosition().x;
+        position_.y = (-2.0f*ypos + window_height_g)/
+                        (window_height_g*camera_zoom) + player_->GetPosition().y;
 
-
-        // GameObject::Update(delta_time);
+        //reset if no longer on target
+        if (target_ != nullptr && !Collide(target_)){
+            setLock(nullptr);
+        }
     }
 }
