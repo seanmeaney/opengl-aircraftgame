@@ -111,6 +111,7 @@ void GameObject::Render(Shader &shader, double current_time){
     glm::vec3 shadowPos = position_;
     shadowPos.x -= shadow_offset;
     shadowPos.y -= shadow_offset;
+    shadowPos.z += 0.15;
     glm::mat4 shadow_translation_matrix = glm::translate(glm::mat4(1.0f), shadowPos);
 
     // Setup the transformation matrix for the shader

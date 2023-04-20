@@ -102,7 +102,7 @@ void Game::Setup(void)
     cursor_ = new CursorGameObject(glm::vec3(0.0f, 0.0f, -0.2f),tex_[TEX_CURSOR], tex_[TEX_CURSOR_LOCK], window_, player_);
 
     // Setup background
-    background = new GameObject(glm::vec3(0.0f, 0.0f, 0.1f), tex_[TEX_DUNE]);
+    background = new GameObject(glm::vec3(0.0f, 0.0f, 0.2f), tex_[TEX_DUNE]);
     background->setCollsionType(0);
     background->SetScale(100.0);
     background->setFill(false);
@@ -182,7 +182,7 @@ void Game::MainLoop(void)
         playerViewMatrix = window_scale * view_matrix;
         // glm::mat4 staticViewMatrix = window_scale * view_matrix;
         // sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
-        sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
+        // sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
         particle_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
         
         // Calculate delta time
@@ -339,6 +339,7 @@ void Game::Update(double delta_time)
         if (p != nullptr){  //if game object is a particle system (as shown by cast)
             current_game_object->Render(particle_shader_, current_time_);
         } else {    //else render with normal shader
+            sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
             current_game_object->Render(sprite_shader_, current_time_);
         }
     }
