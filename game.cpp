@@ -187,9 +187,6 @@ void Game::MainLoop(void)
         // Set view to zoom out, centered by default at 0,0
         glm::mat4 window_scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f/aspect_ratio, 1.0f, 1.0f));
         playerViewMatrix = window_scale * view_matrix;
-        // glm::mat4 staticViewMatrix = window_scale * view_matrix;
-        // sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
-        // sprite_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
         particle_shader_.SetUniformMat4("view_matrix", playerViewMatrix);
         
         // Calculate delta time

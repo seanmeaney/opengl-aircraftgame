@@ -122,15 +122,11 @@ void GameObject::Render(Shader &shader, double current_time){
         glm::mat4 p_rotation_matrix = glm::rotate(glm::mat4(1.0f), parent->GetAngle(), glm::vec3(0.0, 0.0, 1.0));
 
         glm::mat4 p_translation_matrix = glm::translate(glm::mat4(1.0f), parent->GetPosition());
-
-        shadowPos = parent->GetPosition();
-        shadowPos.x -= shadow_offset;
-        shadowPos.y -= shadow_offset;
         
-        glm::mat4 p_shadow_translation_matrix = glm::translate(glm::mat4(1.0f), shadowPos);
+        glm::mat4 p_shadow_translation_matrix = glm::translate(glm::mat4(1.0f), parent->GetPosition());
 
         glm::mat4 p_transformation_matrix = p_translation_matrix * p_rotation_matrix;
-        glm::mat4 p_shadow_transformation_matrix = p_shadow_translation_matrix * p_rotation_matrix;
+        glm::mat4 p_shadow_transformation_matrix = p_shadow_translation_matrix;
 
         transformation_matrix = p_transformation_matrix * transformation_matrix;
         shadow_transformation_matrix = p_shadow_transformation_matrix * shadow_transformation_matrix;
