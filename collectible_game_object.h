@@ -24,7 +24,7 @@ namespace game {
         private:
 
             ObjTypes type_;
-            double startTime;
+            glm::vec3 startPosition;
 
 
 
