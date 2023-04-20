@@ -1,6 +1,5 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 #include "game_object.h"
 
@@ -99,22 +98,17 @@ void GameObject::Render(Shader &shader, double current_time){
     shader.SetUniform1i("fill", fill);
     shader.SetUniform1i("shadow", false);
 
-    // Setup the scaling matrix for the shader
     glm::mat4 scaling_matrix = glm::scale(glm::mat4(1.0f), glm::vec3(scale_, scale_, 1.0));
 
-    // Setup the rotation matrix for the shader
     glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0f), rotation_, glm::vec3(0.0, 0.0, 1.0));
 
-    // Set up the translation matrix for the shader
     glm::mat4 translation_matrix = glm::translate(glm::mat4(1.0f), position_);
 
     glm::vec3 shadowPos = position_;
     shadowPos.x -= shadow_offset;
     shadowPos.y -= shadow_offset;
-    shadowPos.z += 0.15;
     glm::mat4 shadow_translation_matrix = glm::translate(glm::mat4(1.0f), shadowPos);
 
-    // Setup the transformation matrix for the shader
     glm::mat4 transformation_matrix = translation_matrix * rotation_matrix * scaling_matrix;
     glm::mat4 shadow_transformation_matrix = shadow_translation_matrix * rotation_matrix * scaling_matrix;
 
@@ -131,8 +125,6 @@ void GameObject::Render(Shader &shader, double current_time){
         transformation_matrix = p_transformation_matrix * transformation_matrix;
         shadow_transformation_matrix = p_shadow_transformation_matrix * shadow_transformation_matrix;
     }
-
-    // Set the transformation matrix in the shader
     shader.SetUniformMat4("transformation_matrix", transformation_matrix);
 
     // Draw the entity

@@ -17,10 +17,12 @@ class EnemyGameObject : public AircraftGameObject {
 
     inline void SetOrbit(const glm::vec3& orbit) { orbitPoint_= orbit; }
     inline void SetTarget(GameObject* target) { target_ = target; }
+    bool shoot(void);
 
    private:
     void patroll(void);
     void move(void);
+    
 
     int state;
     glm::vec3 orbitPoint_;

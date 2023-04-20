@@ -1,4 +1,5 @@
-#include "defs.h"
+#include <cmath>
+#include <iostream>
 #include "enemy_game_object.h"
 
 namespace game {
@@ -20,8 +21,19 @@ void EnemyGameObject::patroll(void) {
 }
 
 void EnemyGameObject::move(void) {
-    rotation_ = atan2(target_->GetPosition().y - position_.y, target_->GetPosition().x - position_.x) - M_PI / 2;
+    float angleToTarget = atan2(target_->GetPosition().y - position_.y, target_->GetPosition().x - position_.x) - M_PI / 2;
+    std::cout << "angle to target " << angleToTarget << "\n";
+    std::cout << "current angle " << rotation_ << "\n";
+    rotation_ +=  fmod((angleToTarget - rotation_), ENEMY_SPEED_ROTATE);
+    SetAngle(rotation_);
     velocity_ = glm::vec3(-ENEMY_SPEED_MOVE * glm::sin(rotation_), ENEMY_SPEED_MOVE * glm::cos(rotation_), 0);
+}
+
+bool EnemyGameObject::shoot(void){
+    if (fire()){
+        return true;
+    }
+    return false;
 }
 
 // Update function for moving the enemy object around
@@ -40,7 +52,7 @@ void EnemyGameObject::Update(double delta_time) {
         }
 
         // Call the parent's update method to move the object in standard way, if desired
-        GameObject::Update(delta_time);
+        AircraftGameObject::Update(delta_time);
     }
 }
 

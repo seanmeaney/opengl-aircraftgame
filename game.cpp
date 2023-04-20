@@ -104,7 +104,6 @@ void Game::Setup(void)
     cursor_->setShadow(false);
 
     // Set event callbacks
-    // glfwSetFramebufferSizeCallback(window_, ResizeCallback);
     glfwSetWindowUserPointer(window_, cursor_);
     glfwSetCursorPosCallback(window_, mouseCallback);
 
@@ -127,8 +126,7 @@ void Game::generateEnemies(void){
     std::uniform_int_distribution<int> rngPos(-GAME_ENEMY_SPAWN_RADIUS, GAME_ENEMY_SPAWN_RADIUS);
     float tempx;
     float tempy;
-    for (int i = 0; i < rndEnemyNum(rng); i++)
-    {
+    for (int i = 0; i < rndEnemyNum(rng); i++){
         tempx = (float) rngPos(rng);
         tempy = (float) rngPos(rng);
 
@@ -296,7 +294,6 @@ void Game::Controls(void)
             fireMissile(validTarget);
         }
     }
-
     if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window_, true);
     }
@@ -338,8 +335,13 @@ void Game::Update(double delta_time)
             glfwSetWindowShouldClose(window_, true);
         }
 
+        EnemyGameObject *en = dynamic_cast<EnemyGameObject *>(current_game_object);
+        if (en != nullptr && en->shoot()){
+            
+        }
+
         // Render all game objects
-        ParticleSystem *p = dynamic_cast<ParticleSystem*>(current_game_object);
+        ParticleSystem *p = dynamic_cast<ParticleSystem *>(current_game_object);
         if (p != nullptr){  //if game object is a particle system (as shown by cast)
             current_game_object->Render(particle_shader_, current_time_);
         } else {    //else render with normal shader

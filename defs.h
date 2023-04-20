@@ -5,10 +5,13 @@
 const float PLAYER_SPEED_MOVE = 0.03;
 const float PLAYER_SPEED_ROTATE = 0.02;
 const float ENEMY_SPEED_MOVE = 0.5;
+const float ENEMY_SPEED_ROTATE = 0.3;
 const float ENEMY_TARGET_DISTANCE = 4;
 const float BULLET_SPEED = 5.0;
 const float MISSILE_SPEED = 2.0;
 const float COLLECTIBLE_BOB_SPEED = 0.03;
+const float BULLET_COOLDOWN = 0.4;
+const float AIRCRAFT_VELOCITY_CAP = 1.8;
 
 
 //GAME CONSTANTS
