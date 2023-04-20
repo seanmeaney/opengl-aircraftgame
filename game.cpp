@@ -345,6 +345,7 @@ void Game::Update(double delta_time)
 
     for (int i = 0; i < collectibles_.size(); i++)
     {
+        collectibles_[i]->Update(delta_time);
         collectibles_[i]->Render(sprite_shader_, current_time_);
         if(collectibles_[i]->Collide(player_)){
             CollectibleGameObject *tempCur = collectibles_[i];

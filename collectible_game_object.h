@@ -17,12 +17,14 @@ namespace game {
 
             // Update function for moving the player object around
             bool Collide(GameObject *other) override;
+            void Update(double delta_time) override;
 
             inline ObjTypes getType(void) {return type_;}
 
         private:
 
             ObjTypes type_;
+            double startTime;
 
 
 
