@@ -43,7 +43,7 @@ void Game::Init(void)
         glfwTerminate();
         throw(std::runtime_error(std::string("Could not create window")));
     }
-    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     // Make the window's OpenGL context the current one
     glfwMakeContextCurrent(window_);
@@ -55,9 +55,6 @@ void Game::Init(void)
     if (err != GLEW_OK) {
         throw(std::runtime_error(std::string("Could not initialize the GLEW library: ") + std::string((const char *)glewGetErrorString(err))));
     }
-
-    // Set event callbacks
-    // glfwSetFramebufferSizeCallback(window_, ResizeCallback);
 
     // Initialize particle shader
     particle_shader_.Init((resources_directory_g+std::string("/particle_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/particle_fragment_shader.glsl")).c_str());
@@ -73,11 +70,15 @@ void Game::Init(void)
     current_time_ = 0.0;
 }
 
-
 Game::~Game()
 {
     glfwDestroyWindow(window_);
     glfwTerminate();
+}
+
+void Game::mouseCallback(GLFWwindow* window, double xpos, double ypos){
+    CursorGameObject *cur = static_cast<CursorGameObject *>(glfwGetWindowUserPointer(window));
+    cur->mouseCallback(xpos, ypos);
 }
 
 
@@ -99,7 +100,13 @@ void Game::Setup(void)
     game_objects_.push_back(player_);
     
 
-    cursor_ = new CursorGameObject(glm::vec3(0.0f, 0.0f, -0.2f),tex_[TEX_CURSOR], tex_[TEX_CURSOR_LOCK], window_, player_);
+    cursor_ = new CursorGameObject(glm::vec3(0.0f, 0.0f, -0.2f),tex_[TEX_CURSOR], tex_[TEX_CURSOR_LOCK], player_);
+    cursor_->setShadow(false);
+
+    // Set event callbacks
+    // glfwSetFramebufferSizeCallback(window_, ResizeCallback);
+    glfwSetWindowUserPointer(window_, cursor_);
+    glfwSetCursorPosCallback(window_, mouseCallback);
 
     // Setup background
     background = new GameObject(glm::vec3(0.0f, 0.0f, 0.2f), tex_[TEX_DUNE]);
@@ -308,7 +315,7 @@ void Game::Update(double delta_time)
     // Handle user input
     Controls();
 
-    cursor_->Update(delta_time);
+    // cursor_->Update(delta_time);
 
     background->Render(sprite_shader_, current_time_);
 

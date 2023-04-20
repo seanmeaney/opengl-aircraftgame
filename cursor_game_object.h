@@ -1,10 +1,6 @@
 #ifndef CURSOR_GAME_OBJECT_H
 #define CURSOR_GAME_OBJECT_H
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include "game_object.h"
 
 namespace game
@@ -14,7 +10,7 @@ namespace game
 	{
 
 	public:
-		CursorGameObject(const glm::vec3 &position, GLuint texture, GLuint texture2, GLFWwindow *window, GameObject *player);
+		CursorGameObject(const glm::vec3 &position, GLuint texture, GLuint texture2, GameObject *player);
 
 		inline void setLock(GameObject *l) {
 			target_ = l;
@@ -27,15 +23,14 @@ namespace game
 
 		inline GameObject* getTarget(void) { return target_; }
 
-		void Update(double delta_time) override;
+		void mouseCallback(double, double);
 
-		bool Collide(GameObject *other) override;
+		bool Collide(GameObject *) override;
 
 	private:
 		GameObject *player_;
 		GameObject *target_;
 
-		GLFWwindow * window_;
 		GLuint default_tex;
 		GLuint other_tex;
 	};

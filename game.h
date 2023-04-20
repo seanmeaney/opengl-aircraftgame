@@ -44,6 +44,8 @@ namespace game {
             void generateEnemies(void);
             void generateCollectibles(void);
 
+            static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
+
             void superHackeyHudThing(void);
 
         private:
