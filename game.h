@@ -39,7 +39,7 @@ namespace game {
             // Run the game (keep the game active)
             void MainLoop(void); 
 
-            void fireBullet(void);
+            void fireBullet(GameObject *);
             void fireMissile(GameObject *);
             void generateEnemies(void);
             void generateCollectibles(void);

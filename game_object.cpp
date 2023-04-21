@@ -1,4 +1,3 @@
-#define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "game_object.h"
@@ -18,7 +17,7 @@ GameObject::GameObject(const glm::vec3 &position, GLuint texture)
     collisionType_ = STANDARDCOLLISION;
     deceased_ = false;
     parent = nullptr;
-    health_ = 100.0f;
+    health_ = DEFUALT_STARTING_HEALTH;
     shadow_ = true;
 }
 

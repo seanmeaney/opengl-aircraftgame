@@ -22,16 +22,14 @@ void EnemyGameObject::patroll(void) {
 
 void EnemyGameObject::move(void) {
     float angleToTarget = atan2(target_->GetPosition().y - position_.y, target_->GetPosition().x - position_.x) - M_PI / 2;
-    std::cout << "angle to target " << angleToTarget << "\n";
-    std::cout << "current angle " << rotation_ << "\n";
-    rotation_ +=  fmod((angleToTarget - rotation_), ENEMY_SPEED_ROTATE);
-    SetAngle(rotation_);
+    SetAngle(angleToTarget);
     velocity_ = glm::vec3(-ENEMY_SPEED_MOVE * glm::sin(rotation_), ENEMY_SPEED_MOVE * glm::cos(rotation_), 0);
 }
 
 bool EnemyGameObject::shoot(void){
-    if (fire()){
-        return true;
+    float angleToTarget = atan2(target_->GetPosition().y - position_.y, target_->GetPosition().x - position_.x) - M_PI / 2;
+    if (glm::abs((angleToTarget - rotation_) < ENEMY_SHOOT_MAX_ANGLE) && glm::distance (position_, target_->GetPosition()) < ENEMY_SHOOT_DISTANCE){
+        return fire();
     }
     return false;
 }

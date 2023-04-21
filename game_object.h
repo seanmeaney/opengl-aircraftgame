@@ -1,6 +1,8 @@
 #ifndef GAME_OBJECT_H_
 #define GAME_OBJECT_H_
 
+#define GLM_FORCE_RADIANS
+
 #include <vector>
 #include <glm/glm.hpp>
 #define GLEW_STATIC

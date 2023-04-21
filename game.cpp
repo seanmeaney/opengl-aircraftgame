@@ -245,11 +245,11 @@ void Game::SetAllTextures(void)
     SetTexture(tex_[14], (resources_directory_g+std::string("/textures/hud.png")).c_str());
 }
 
-void Game::fireBullet(void){
-    BulletGameObject* b = new BulletGameObject(player_->GetPosition(), tex_[TEX_BULLET], player_);
-    b->SetVelocity(BULLET_SPEED * player_->GetBearing());
+void Game::fireBullet(GameObject * firee){
+    BulletGameObject* b = new BulletGameObject(firee->GetPosition(), tex_[TEX_BULLET], firee);
+    b->SetVelocity(BULLET_SPEED * firee->GetBearing());
     b->SetScale(0.3);
-    b->SetAngle(player_->GetAngle());
+    b->SetAngle(firee->GetAngle());
     game_objects_.push_back(b);
 }
 
@@ -285,7 +285,7 @@ void Game::Controls(void)
     }
     if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS) {
         if (player_->fire()){
-            fireBullet();
+            fireBullet(player_);
         }
     }
     if (glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
@@ -337,7 +337,7 @@ void Game::Update(double delta_time)
 
         EnemyGameObject *en = dynamic_cast<EnemyGameObject *>(current_game_object);
         if (en != nullptr && en->shoot()){
-            
+            fireBullet(en);
         }
 
         // Render all game objects
