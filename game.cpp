@@ -257,7 +257,6 @@ void Game::fireMissile(GameObject * target){
     MissileGameObject* m = new MissileGameObject(player_->GetPosition(),tex_[TEX_MISSILE],player_, target);
     m->SetScale(0.4);
     m->SetAngle(player_->GetAngle());
-
     ParticleSystem *particles = new ParticleSystem(glm::vec3(0.0f, -0.2f, 0.0f), tex_[TEX_ORB], m);
     particles->setCollsionType(0);
     particles->SetScale(0.2);
@@ -265,6 +264,8 @@ void Game::fireMissile(GameObject * target){
     game_objects_.push_back(particles);
     game_objects_.push_back(m);
     inv.numMissiles--;
+
+    m->setChildParticles(particles);
 }
 
 void Game::Controls(void)
@@ -299,6 +300,28 @@ void Game::Controls(void)
     }
 }
 
+void Game::updateCollectibles(double delta_time){
+    for (int i = 0; i < collectibles_.size(); i++)
+    {
+        collectibles_[i]->Update(delta_time);
+        collectibles_[i]->Render(sprite_shader_, current_time_);
+        if(collectibles_[i]->Collide(player_)){
+            CollectibleGameObject *tempCur = collectibles_[i];
+            ObjTypes temp = tempCur->getType();
+            if (temp == MissileType){
+                inv.numMissiles++;
+            } else if (temp == RocketBodyType){
+                inv.rocketBody = true;
+            } else if (temp == RocketBoosterType){
+                inv.rocketBooster ++;
+            } else if (temp == RocketFuel){
+                inv.rocketFuel = true;
+            }
+            collectibles_.erase(collectibles_.begin() + i);
+            delete tempCur;
+        }
+    }
+}
 
 void Game::Update(double delta_time)
 {
@@ -350,26 +373,7 @@ void Game::Update(double delta_time)
         }
     }
 
-    for (int i = 0; i < collectibles_.size(); i++)
-    {
-        collectibles_[i]->Update(delta_time);
-        collectibles_[i]->Render(sprite_shader_, current_time_);
-        if(collectibles_[i]->Collide(player_)){
-            CollectibleGameObject *tempCur = collectibles_[i];
-            ObjTypes temp = tempCur->getType();
-            if (temp == MissileType){
-                inv.numMissiles++;
-            } else if (temp == RocketBodyType){
-                inv.rocketBody = true;
-            } else if (temp == RocketBoosterType){
-                inv.rocketBooster ++;
-            } else if (temp == RocketFuel){
-                inv.rocketFuel = true;
-            }
-            collectibles_.erase(collectibles_.begin() + i);
-            delete tempCur;
-        }
-    }
+    updateCollectibles(delta_time);
 
     headsUD->update(inv);
 

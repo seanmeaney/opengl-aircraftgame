@@ -43,6 +43,7 @@ namespace game {
             void fireMissile(GameObject *);
             void generateEnemies(void);
             void generateCollectibles(void);
+            void updateCollectibles(double);
 
             static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 

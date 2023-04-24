@@ -16,11 +16,16 @@ bool MissileGameObject::Collide(GameObject *other){
     if (other != firer && other->getCollisionType() == STANDARDCOLLISION){
         if(glm::distance(position_, other->GetPosition()) < 0.2f){
             deceased_ = true;
+            childParticles_->kill(true);
             other->setHealth(0.0f);
             return true;
         }
     }
     return false;
+}
+
+void MissileGameObject::setChildParticles(GameObject * c){
+    childParticles_ = c;
 }
 
 void MissileGameObject::Update(double delta_time) {
@@ -31,11 +36,10 @@ void MissileGameObject::Update(double delta_time) {
     last_t_ = current_t_;
     current_t_ += delta_time;
 	
-	if(current_t_ - start_time > 8){
+	if(current_t_ - start_time > MISSILE_MAX_FLIGHT){
 		deceased_ = true;
 	}
 
-    
     GameObject::Update(delta_time);
 }
 

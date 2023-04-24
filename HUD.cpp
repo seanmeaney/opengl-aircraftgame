@@ -44,7 +44,6 @@ void HUD::render(Shader& sprite_shader, double current_time){
     if (body){
         rocket_body_->Render(sprite_shader, current_time);
     }
-    
     if(booster1){
         rocket_booster1_->Render(sprite_shader, current_time);
     }

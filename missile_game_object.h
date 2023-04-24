@@ -12,6 +12,8 @@ namespace game {
         public:
             MissileGameObject(const glm::vec3 &position, GLuint texture, GameObject *dontKillMePlz, GameObject *target);
 
+
+            void setChildParticles(GameObject *);
             // Update function for moving the player object around
             void Update(double delta_time) override;
 
@@ -23,6 +25,7 @@ namespace game {
 
             GameObject *firer;
             GameObject *target_;
+            GameObject *childParticles_;
 
             float current_t_;
 

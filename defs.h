@@ -13,6 +13,7 @@ const float ENEMY_SHOOT_MAX_ANGLE = 0.5;
 const float BULLET_SPEED = 5.0;
 const float BULLET_DAMAGE = 25.0;
 const float MISSILE_SPEED = 2.0;
+const float MISSILE_MAX_FLIGHT = 8.0;
 const float COLLECTIBLE_BOB_SPEED = 0.03;
 const float BULLET_COOLDOWN = 0.4;
 const float AIRCRAFT_VELOCITY_CAP = 1.8;
