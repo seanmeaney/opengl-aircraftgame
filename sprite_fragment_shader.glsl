@@ -24,7 +24,7 @@ void main()
     if (!shadow){
         gl_FragColor = vec4(color.r, color.g, color.b, color.a);
     } else{
-        gl_FragColor = vec4(0.3, 0.3, 0.3, color.a);
+        gl_FragColor = vec4(0.3, 0.3, 0.3, 0.3);
     }
 
     // Check for transparency

@@ -16,13 +16,18 @@ EnemyGameObject::EnemyGameObject(const glm::vec3 &position, GLuint texture, cons
 }
 
 void EnemyGameObject::patroll(void) {
-    rotation_ = atan2(position_.y - orbitPoint_.y, position_.x - orbitPoint_.x);
+    SetAngle(atan2(position_.y - orbitPoint_.y, position_.x - orbitPoint_.x));
     velocity_ = glm::vec3(-ENEMY_SPEED_MOVE * glm::sin(rotation_), ENEMY_SPEED_MOVE * glm::cos(rotation_), 0);
 }
 
 void EnemyGameObject::move(void) {
     float angleToTarget = atan2(target_->GetPosition().y - position_.y, target_->GetPosition().x - position_.x) - M_PI / 2;
-    SetAngle(angleToTarget);
+    angleToTarget = fmod(angleToTarget, 2 * M_PI);
+    if (angleToTarget < 0.0){
+        angleToTarget += 2 * M_PI;
+    }
+    float allowedAngleDelta = fmod((rotation_ - angleToTarget), ENEMY_SPEED_ROTATE);
+    SetAngle(rotation_ - allowedAngleDelta);
     velocity_ = glm::vec3(-ENEMY_SPEED_MOVE * glm::sin(rotation_), ENEMY_SPEED_MOVE * glm::cos(rotation_), 0);
 }
 
@@ -38,12 +43,6 @@ bool EnemyGameObject::shoot(void){
 void EnemyGameObject::Update(double delta_time) {
     if (!deceased_) {
         if (glm::distance(position_, target_->GetPosition()) > ENEMY_TARGET_DISTANCE) {
-            state = 0;
-        } else {
-            state = 1;
-        }
-
-        if (state == 0) {
             patroll();
         } else {
             move();

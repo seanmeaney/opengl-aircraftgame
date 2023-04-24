@@ -12,6 +12,7 @@ PlayerGameObject::PlayerGameObject(const glm::vec3 &position, GLuint texture, GL
         blades = new GameObject(glm::vec3(0.0f,0.0f,-0.1f), bladeTexture);
         blades->setParent(this);
         subObjects.push_back(blades);
+        health_ = PLAYER_STARTING_HEALTH;
     }
 
 // Update function for moving the player object around

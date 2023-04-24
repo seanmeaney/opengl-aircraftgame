@@ -24,7 +24,7 @@ GameObject::GameObject(const glm::vec3 &position, GLuint texture)
 
 bool GameObject::Collide(GameObject *other){
     if(!deceased_ && !other->isKill() &&  collisionType_ == STANDARDCOLLISION && other->collisionType_ == STANDARDCOLLISION){
-        if(glm::distance(position_, other->position_) < 0.5f){
+        if(glm::distance(position_, other->position_) < DEFAULT_COLLISION_DISTANCE){
             deceased_ = true;
             other->deceased_ = true;
             return true;
@@ -65,8 +65,7 @@ void GameObject::SetAngle(float angle){
 
 void GameObject::Update(double delta_time) {
 
-    for (int i = 0; i < subObjects.size(); i++)
-    {
+    for (int i = 0; i < subObjects.size(); i++){
         subObjects[i]->Update(delta_time);
     }
     

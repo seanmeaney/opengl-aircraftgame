@@ -19,7 +19,7 @@ bool BulletGameObject::Collide(GameObject *other) {
         glm::vec3 pmc(initial_pos_ - other->GetPosition());
         float a = glm::dot(velocity_, velocity_);
         float b = glm::dot(2.0f * velocity_, pmc);
-        // May need to fine-tune the default radius for best effects
+
         float r = 0.5;
         float c = glm::dot(pmc, pmc) - r * r;
 
@@ -33,8 +33,7 @@ bool BulletGameObject::Collide(GameObject *other) {
 
         if ((t1 > last_t_) && (t1 < current_t_) || (t2 > last_t_) && (t2 < current_t_)) {
             deceased_ = true;
-            // other->kill(true);
-			other->setHealth(other->getHealth() - 25.0f);
+			other->setHealth(other->getHealth() - BULLET_DAMAGE);
 			return true;
         }
     }
